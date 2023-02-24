@@ -7,13 +7,8 @@ abstract class TickerViewerEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class TickerViewerSubscribeEvent extends TickerViewerEvent {
-  final Set<String> symbols;
-
-  const TickerViewerSubscribeEvent(this.symbols);
-
-  @override
-  List<Object> get props => [symbols];
+class TickerViewerCreatedEvent extends TickerViewerEvent {
+  const TickerViewerCreatedEvent();
 }
 
 class TickerViewerSearchEvent extends TickerViewerEvent {

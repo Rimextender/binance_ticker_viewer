@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:binance_ticker_viewer/data/data_provider/binance_data_provider.dart';
-import 'package:binance_ticker_viewer/data/models/ticker_entry_model.dart';
 
 import '../models/ticker_data_model.dart';
 
@@ -12,9 +11,25 @@ class TickerRepository {
     dataProvider.subscribe(name);
   }
 
+  void unsubscribeFromTicker(String name) {
+    dataProvider.unsubscribe(name);
+  }
+
   Stream<TickerDataModel> getTickerStream(String name) {
-    return dataProvider.getStream().where((event) {
-      return event.containsKey('s') ? event['s'].toLowerCase() == name : false;
-    }).map((event) => TickerDataModel.fromJson(event));
+    return dataProvider.broadcastStream
+        .where((event) => event is String)
+        .map((event) => jsonDecode(event))
+        .where((event) => (event.containsKey('s')
+            ? (event['s'] ?? '')
+                .toString()
+                .toLowerCase()
+                .contains(name.toLowerCase())
+            : false))
+        .map<TickerDataModel>((event) => TickerDataModel.fromJson(event));
+  }
+
+  void dispose() {
+    dataProvider.unsubscribeFromAll();
+    dataProvider.closeConnection();
   }
 }

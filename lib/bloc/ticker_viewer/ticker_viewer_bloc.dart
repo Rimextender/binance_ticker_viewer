@@ -1,6 +1,3 @@
-import 'dart:async';
-
-import 'package:binance_ticker_viewer/data/models/ticker_entry_model.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -9,10 +6,20 @@ import '../../data/repository/ticker_repository.dart';
 part 'ticker_viewer_event.dart';
 part 'ticker_viewer_state.dart';
 
-class TickerViewerBloc extends Bloc<TickerViewerEvent, TickerViewerState> {
-  TickerRepository repository = TickerRepository();
+const String quote = 'usdt';
 
-  TickerViewerBloc(Set<String> symbols) : super(TickerViewerInitial(symbols)) {
+class TickerViewerBloc extends Bloc<TickerViewerEvent, TickerViewerState> {
+  final TickerRepository repository;
+
+  TickerViewerBloc(Set<String> symbols, this.repository)
+      : super(TickerViewerInitial(symbols)) {
+    on<TickerViewerCreatedEvent>(
+      (event, emit) {
+        for (var symbol in symbols) {
+          repository.subscribeToTicker('$symbol$quote'.toLowerCase());
+        }
+      },
+    );
     on<TickerViewerSearchEvent>(
       (event, emit) {
         if (event.query.isEmpty) {
@@ -27,5 +34,6 @@ class TickerViewerBloc extends Bloc<TickerViewerEvent, TickerViewerState> {
         }
       },
     );
+    add(const TickerViewerCreatedEvent());
   }
 }

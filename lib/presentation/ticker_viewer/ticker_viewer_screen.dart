@@ -1,20 +1,32 @@
-import 'package:binance_ticker_viewer/bloc/ticker_bloc/ticker_bloc.dart';
-import 'package:binance_ticker_viewer/data/models/ticker_entry_model.dart';
-import 'package:binance_ticker_viewer/presentation/ticker_viewer/components/search_field_widget.dart';
-import 'package:binance_ticker_viewer/presentation/ticker_viewer/components/ticker_entry_widget.dart';
+import 'package:binance_ticker_viewer/data/repository/ticker_repository.dart';
 import 'package:binance_ticker_viewer/presentation/ticker_viewer/ticker_view.dart';
-import 'package:dartz/dartz.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../bloc/ticker_viewer/ticker_viewer_bloc.dart';
 import '../styles/styles.dart';
 
-class TickerViewerScreen extends StatelessWidget {
+class TickerViewerScreen extends StatefulWidget {
   const TickerViewerScreen({super.key});
 
+  @override
+  State<TickerViewerScreen> createState() => _TickerViewerScreenState();
+}
+
+class _TickerViewerScreenState extends State<TickerViewerScreen> {
   final Set<String> symbols = const {"BTC", "ETH", "XRP", "BNB"};
+  late final TickerViewerBloc bloc;
+  final TickerRepository repository = TickerRepository();
+
+  _TickerViewerScreenState() {
+    bloc = TickerViewerBloc(symbols, repository);
+  }
+
+  @override
+  void dispose() {
+    bloc.close();
+    repository.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +34,12 @@ class TickerViewerScreen extends StatelessWidget {
       backgroundColor: StyleColors.background,
       extendBodyBehindAppBar: false,
       body: SafeArea(
-        child: BlocProvider(
-          create: (context) => TickerViewerBloc(symbols),
-          child: const TickerView(),
+        child: RepositoryProvider.value(
+          value: repository,
+          child: BlocProvider.value(
+            value: bloc,
+            child: const TickerView(),
+          ),
         ),
       ),
     );

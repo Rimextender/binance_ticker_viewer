@@ -1,7 +1,5 @@
 import 'dart:math';
 
-import 'package:intl/intl.dart';
-
 enum NumberFormatOrders {
   n(1),
   k(1000),

@@ -1,5 +1,5 @@
 name: binance_ticker_viewer
-description: A new Flutter project.
+description: Binance Ticker Viewer
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
@@ -13,7 +13,6 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.2
   web_socket_channel: ^2.3.0
-  dartz: ^0.10.1
   flutter_screenutil: ^5.5.4  
   bloc: ^8.1.1
   flutter_bloc: ^8.1.1
@@ -21,7 +20,6 @@ dependencies:
   dio: ^4.0.6
   json_annotation: ^4.7.0
   google_fonts: ^3.0.1
-  intl: ^0.18.0
 
 dev_dependencies:
   flutter_test:

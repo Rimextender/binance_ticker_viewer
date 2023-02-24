@@ -1,7 +1,5 @@
 part of 'ticker_bloc.dart';
 
-const String quoute = 'USDT';
-
 abstract class TickerState extends Equatable {
   const TickerState(this.data);
   final TickerEntryModel data;

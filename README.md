@@ -1,6 +1,6 @@
 # binance_ticker_viewer
 
-A new Flutter project.
+Binance Ticker Viewer, created using Binance Websocket API
 
 ## Getting Started
 

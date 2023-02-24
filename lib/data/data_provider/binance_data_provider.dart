@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'dart:convert';
 
@@ -6,13 +8,17 @@ const String _apiEndpointUri = 'wss://stream.binance.com:443/ws/usdt@ticker';
 class BinanceTickerDataProvider {
   final WebSocketChannel channel =
       WebSocketChannel.connect(Uri.parse(_apiEndpointUri));
+  late final Stream broadcastStream;
+
+  BinanceTickerDataProvider() {
+    broadcastStream = channel.stream.asBroadcastStream(
+      onCancel: (sub) => sub.cancel(),
+    );
+  }
 
   Set<String> subscribedPairs = {};
 
-  Stream getStream() =>
-      channel.stream.map((event) => jsonDecode(event)).asBroadcastStream();
-
-  String subscribe(String tickerName) {
+  Future<void> subscribe(String tickerName) async {
     String subscribtionKey = '$tickerName@miniTicker';
     subscribedPairs.add(subscribtionKey);
     Map payload = {
@@ -21,7 +27,6 @@ class BinanceTickerDataProvider {
       "id": 1,
     };
     channel.sink.add(json.encode(payload));
-    return subscribtionKey;
   }
 
   void unsubscribe(String tickerName) {
