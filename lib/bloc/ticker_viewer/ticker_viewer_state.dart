@@ -5,7 +5,7 @@ abstract class TickerViewerState extends Equatable {
   final Set<String> symbols;
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [symbols];
 }
 
 class TickerViewerInitial extends TickerViewerState {
@@ -17,9 +17,12 @@ class TickerViewerSubscribedState extends TickerViewerState {
 }
 
 class TickerViewerFilteredState extends TickerViewerState {
-  const TickerViewerFilteredState(super.symbols, this.filteredSymbols);
+  const TickerViewerFilteredState(super.symbols, this.query);
 
-  final Set<String> filteredSymbols;
+  final String query;
+
+  @override
+  List<Object> get props => [symbols, query];
 }
 
 class TickerViewerErrorState extends TickerViewerState {

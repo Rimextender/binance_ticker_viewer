@@ -10,7 +10,7 @@ abstract class TickerEvent extends Equatable {
 class TickerCreated extends TickerEvent {}
 
 class TickerUpdateRecieved extends TickerEvent {
-  final TickerEntryModel data;
+  final TickerDataModel data;
 
   const TickerUpdateRecieved(this.data);
 }

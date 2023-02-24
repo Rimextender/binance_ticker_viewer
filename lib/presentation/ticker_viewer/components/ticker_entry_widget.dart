@@ -71,7 +71,7 @@ class TickerEntryWidget extends StatelessWidget {
                   children: [
                     TextSpan(
                       text:
-                          '${Formatters.displayPrice(model.close, decimals: 2)}\n',
+                          '${Formatters.displayPrice(model.close, decimals: model.close > 1 ? 2 : 4)}\n',
                       style: symbolPriceTextStyle.copyWith(
                         color: model.change > 0
                             ? StyleColors.positive

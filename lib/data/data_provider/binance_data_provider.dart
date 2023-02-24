@@ -9,10 +9,11 @@ class BinanceTickerDataProvider {
 
   Set<String> subscribedPairs = {};
 
-  Stream getStream() => channel.stream.asBroadcastStream();
+  Stream getStream() =>
+      channel.stream.map((event) => jsonDecode(event)).asBroadcastStream();
 
   String subscribe(String tickerName) {
-    String subscribtionKey = '$tickerName@miniticker';
+    String subscribtionKey = '$tickerName@miniTicker';
     subscribedPairs.add(subscribtionKey);
     Map payload = {
       "method": "SUBSCRIBE",
@@ -24,7 +25,7 @@ class BinanceTickerDataProvider {
   }
 
   void unsubscribe(String tickerName) {
-    String subscribtionKey = '$tickerName@miniticker';
+    String subscribtionKey = '$tickerName@miniTicker';
     Map data = {
       "method": "UNSUBSCRIBE",
       "params": [subscribtionKey],
@@ -37,7 +38,7 @@ class BinanceTickerDataProvider {
   void unsubscribeFromAll() {
     Map data = {
       "method": "UNSUBSCRIBE",
-      "params": subscribedPairs.toList(),
+      "params": subscribedPairs.map((e) => '$e@miniTicker').toList(),
       "id": 1
     };
     channel.sink.add(json.encode(data));

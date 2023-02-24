@@ -9,8 +9,8 @@ class TickerEntryModel extends Equatable {
   final bool isHidden;
 
   double get volumeopen => volume * close;
-  double get change => close - open;
-  String get name => '$base$quote';
+  double get change => (close - open) / open * 100;
+  String get name => '$base$quote'.toLowerCase();
 
   const TickerEntryModel({
     required this.base,
