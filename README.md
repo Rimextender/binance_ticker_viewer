@@ -4,7 +4,7 @@ Binance Ticker Viewer, created using Binance Websocket API
 App architecture consists of free layers: Data layer, Buisness Logic layer and Presentation layer.
 
 ## Buisness Logic layer
-Two BLoCs are repsonsible for managing app state. **TickerViewerBloc** manages subscriptions to Binance Websocket API and search events, **TickerBloc** listens to events from stream of tickers.
+Two BLoCs are repsonsible for managing app state. **TickerViewerBloc** manages subscriptions to Binance Websocket API and search events, **TickerBloc** listens to events from stream of tickers. **TickerBloc** is created for each symbol, i.e. each list item has it's in **TickerBloc**.
 
 ## Data layer
 Data layer has **TickerProvider**, which communicates with **BinanceTickerDataProvider** to recieve raw ticker data in **String** format. Recieved data is then decoded to json and parsed to simple **TickerDataModel**. Each **TickerBloc** subscribes to **TickerProvider**'s ticker stream and generates events to updated it's inner **TickerEntryModel** with new data.
