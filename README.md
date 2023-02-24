@@ -1,16 +1,20 @@
 # binance_ticker_viewer
 
 Binance Ticker Viewer, created using Binance Websocket API
+App architecture consists of free layers: Data layer, Buisness Logic layer and Presentation layer.
 
-## Getting Started
+## Buisness Logic layer
+Two BLoCs are repsonsible for managing app state. **TickerViewerBloc** manages subscriptions to Binance Websocket API and search events, **TickerBloc** listens to events from stream of tickers.
 
-This project is a starting point for a Flutter application.
+## Data layer
+Data layer has **TickerProvider**, which communicates with **BinanceTickerDataProvider** to recieve raw ticker data in **String** format. Recieved data is then decoded to json and parsed to simple **TickerDataModel**. Each **TickerBloc** subscribes to **TickerProvider**'s ticker stream and generates events to updated it's inner **TickerEntryModel** with new data.
 
-A few resources to get you started if this is your first Flutter project:
+### BinanceTickerDataProvider
+**BinanceTickerDataProvider** uses [web_socket_channel](https://pub.dev/packages/web_socket_channel) package to handle connection to specified websocket. It's stream is then exposed as a broadcast stream to allow for multiple stream listeners. In addition, this class exposes methods to handle subscibtions to **Individual Symbol Mini Ticker Stream**.    
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Presentation layer
+Presentation layer contains screens, components and styles (a few color constants). **TickerViewerScreen** is a simple screen which contains **TickerView** and provides **TickerRepository** and **TickerViewerBloc** for all it's descendants, and also disposes provided objects when screen's widget is disposed.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+**TickerEntryWidget** consumes **TickerBloc**'s states and displays live single ticker data.
+
+**SearchFiledWidget** does not communicate with blocs directly, instead it exposes **onChanged** method which is used in **TickerView** to generate **TickerViewerSearchEvent** for **TickerViewerBloc**.
